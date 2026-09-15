@@ -67,15 +67,41 @@ rather than a period.
 **I did not tune either method to make them agree.** They disagree on the Warsh
 era, and the report presents that disagreement as a result.
 
-**Regression code (`src/validate.py`) — AI-assisted.**
-_(to be completed)_
+**Exhibits and regressions (`src/exhibits.py`, `src/validate.py`) — AI-assisted.**
+Claude wrote the event-window logic (the release-time rule that decides between a
+same-day and a next-session close-to-close window), Table 1, Figure 1, Table 2,
+the Table 3 regressions and the report build script. Two analytical choices in
+Table 3 are mine and are worth flagging, because they change how the table reads:
+
+* **No p-values.** With three parameters and six to eight observations,
+  conventional significance tests would imply far more than the data supports.
+  The table reports coefficients, signs and R-squared instead, and the
+  sign-agreement column asks whether each coefficient points the way theory
+  says — a question six observations can speak to.
+* **Incremental R-squared.** The 3-month bill control mechanically explains most
+  of the variation in the yield indicators, so the full R-squared flatters the
+  tone variable. The table reports the increment over a control-only regression,
+  which is the number that actually answers whether tone moved markets.
+
+Table 3 is also run two ways. Two Warsh-era dates carry both a statement and its
+press conference, so the by-release panel repeats the same dependent variable
+twice; the collapsed panel averages releases sharing a market day. Both are
+reported because neither is obviously right.
+
+**The report (`report/report.md`, `report/build_report.py`) — mixed.**
+Claude drafted sections 1-7 and 9 from the results and built the PDF pipeline. I
+reviewed and edited the prose, and I wrote section 8 (see below). The build
+script injects every table and the figure directly from `outputs/` at build
+time, so the report cannot drift from the analysis that produced it.
 
 ## What is my own
 
-**The forecast section of the report — rate decision probabilities, the
-tone-direction probability, the per-indicator probabilities and expected sizes,
-the trade recommendation and its falsification condition — is my own analysis.**
-It is not generated output. It is my reading of the completed tables.
+**Section 8 of the report — the forecast for the September 16, 2026 meeting:
+rate decision probabilities, the tone-direction probability, the per-indicator
+probabilities and expected sizes, the trade recommendation and its falsification
+condition — is my own analysis.** It is not generated output. It is my reading of
+the completed tables. The section is laid out with empty cells in the committed
+PDF precisely so that it is clear nothing in it was machine-written.
 
 ## Scope decisions made under time pressure
 

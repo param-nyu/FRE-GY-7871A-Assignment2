@@ -20,9 +20,19 @@ markets, and what does that imply for the September 16, 2026 FOMC meeting?
 
 ```bash
 pip install -r requirements.txt
-python -m src.collect          # ~4 minutes; writes data/ (not committed)
-jupyter lab notebook.ipynb     # the analysis, tables and figures
+
+python -m src.collect          # ~4 min   documents + market data -> data/
+python -m src.score_wordlist   # ~10 sec  Method 1  -> data/interim/scores_wordlist.csv
+python -m src.score_finbert    # ~12 min  Method 2  -> data/interim/scores_finbert.csv
+python -m src.exhibits         #          Table 1, Figure 1 -> outputs/
+python -m src.validate         #          Tables 2 and 3    -> outputs/
+python report/build_report.py  #          outputs/ -> report/REPORT.pdf
+
+jupyter lab notebook.ipynb     # the same analysis, with saved output
 ```
+
+`src.collect` caches every document as a text file and `src.score_finbert` caches
+per-document scores, so re-runs are cheap. Deleting `data/` forces a full refresh.
 
 `src/collect.py` caches every document as a text file under `data/docs/`, so
 re-runs are cheap. Deleting `data/` forces a full refresh.
@@ -60,13 +70,29 @@ are excluded. The rationale and the cost of this choice are in `AI_USE.md`.
 ## Layout
 
 ```
-notebook.ipynb        main analysis, saved output
-src/collect.py        federalreserve.gov + FRED/Yahoo collection
-src/score_wordlist.py hand-built hawkish/dovish word list, tf.idf weighted
-src/score_finbert.py  FinBERT + numeric-direction augmentation
-src/validate.py       Table 3 regressions
-report/               the PDF report
-AI_USE.md             AI assistance and scope decisions
+notebook.ipynb          main analysis, saved output
+src/collect.py          federalreserve.gov + FRED/Yahoo collection
+src/lexicon.py          the hand-built hawkish/dovish phrase list
+src/score_wordlist.py   Method 1: tf.idf-weighted word list
+src/score_finbert.py    Method 2: FinBERT + numeric-direction augmentation
+src/exhibits.py         Table 1, Figure 1
+src/validate.py         event windows, Tables 2 and 3
+report/report.md        report source; exhibits injected at build time
+report/build_report.py  builds report/REPORT.pdf
+AI_USE.md               AI assistance and scope decisions
 ```
 
 No data files are committed; `src/collect.py` rebuilds all of `data/`.
+
+## Results in one paragraph
+
+All eight Warsh-era documents score hawkish on the primary word-list measure, with
+his four policy speeches at the 97th-100th percentile of 117 Powell-era policy
+speeches. The word list gets 3 of 4 regression coefficient signs right; both
+FinBERT variants get 0 of 4, because plain FinBERT reads Warsh's terse,
+"solid growth / strong investment" statements as good news and therefore as dovish.
+The word list's largest incremental explanatory power falls on the 1-year Treasury
+and the growth-value spread, the same two indicators the Parsing the Fed
+presentation found it strongest on. With eight releases on six market days, none of
+this is offered as statistical inference, and the report says so on the face of
+Table 3.

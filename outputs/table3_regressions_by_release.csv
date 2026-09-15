@@ -1,0 +1,13 @@
+Indicator,Units,Tone measure,N,Beta (tone),Beta (3M bill),R2,R2 (control only),R2 from tone,Expected sign,Sign matches
+DXY,%,tone_wordlist,8,0.0053,0.0912,0.678,0.657,0.021,+,True
+DXY,%,tone_finbert,8,-0.5199,0.0903,0.677,0.657,0.02,+,False
+DXY,%,tone_finbert_aug,8,-0.7316,0.0888,0.693,0.657,0.035,+,False
+T10Y2Y,bp,tone_wordlist,8,0.0029,-1.5014,0.915,0.915,0.0,-,False
+T10Y2Y,bp,tone_finbert,8,0.9766,-1.505,0.915,0.915,0.0,-,False
+T10Y2Y,bp,tone_finbert_aug,8,1.663,-1.5021,0.916,0.915,0.001,-,False
+DGS1,bp,tone_wordlist,8,0.1256,1.6729,0.857,0.813,0.044,+,True
+DGS1,bp,tone_finbert,8,-8.7149,1.6424,0.834,0.813,0.021,+,False
+DGS1,bp,tone_finbert_aug,8,-9.8019,1.6181,0.837,0.813,0.024,+,False
+GROWTH_VALUE,pp,tone_wordlist,8,-0.0189,0.0148,0.1,0.014,0.087,-,True
+GROWTH_VALUE,pp,tone_finbert,8,0.6966,0.0209,0.025,0.014,0.012,-,False
+GROWTH_VALUE,pp,tone_finbert_aug,8,0.5682,0.0227,0.021,0.014,0.007,-,False
