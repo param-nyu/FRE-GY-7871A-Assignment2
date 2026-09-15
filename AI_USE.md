@@ -2,143 +2,132 @@
 
 Course: FRE-GY 7871A, NLP and the Investment Process (Fall 2026)
 Assignment 2 — Fed communication tone under Chair Warsh
+Author: Param Shah
 
 ## Summary
 
-Claude (Anthropic, Claude Code) was used as a coding assistant for the data
-collection, scoring and regression code in `src/`, and for drafting the
-structure of this repository. The tone lexicon, the interpretation of results,
-and the entire forecast and trade recommendation are my own work. Details below.
+**This assignment was produced with extensive AI assistance.** Claude (Anthropic,
+Claude Opus, via Claude Code) wrote substantially all of the code in `src/`, the
+hawkish/dovish lexicon, the notebook, and the prose of the report including the
+forecast in section 8. My role was to specify the assignment, direct the work,
+review and accept or reject what came back, and make the judgement calls listed
+under "What is mine" below.
 
-## What was AI-assisted
+An earlier draft of this file distributed credit more favourably to me than the
+record supports — it described the lexicon, several bug fixes and the Table 3
+design choices as my own. They were not. This version corrects that.
 
-**Data collection (`src/collect.py`) — AI-assisted.**
-Claude located the Board's JSON news listings (`/json/ne-press.json`,
+## What Claude did
+
+**Repository design and data collection (`src/config.py`, `src/collect.py`).**
+Claude found the Board's JSON news listings (`/json/ne-press.json`,
 `ne-speeches.json`, `ne-testimony.json`), which carry release date *and time*,
-and wrote the scraping, text-extraction and caching code, including the step
-that follows a minutes press release through to the minutes document itself
-(the press release is only a ~130-word announcement). Market data plumbing
-(Yahoo Finance for DXY/IWF/IWN, keyless FRED CSV for T10Y2Y/DGS1/DGS3MO) was
-also AI-written. I verified the resulting corpus by hand against the FOMC
-calendar.
+and wrote all the scraping, text extraction, caching and market-data code
+(Yahoo Finance for DXY/IWF/IWN; keyless FRED CSV for T10Y2Y/DGS1/DGS3MO). It
+also found and fixed, on its own initiative, three extraction faults:
 
-**Word list, Method 1 (`src/lexicon.py`, `src/score_wordlist.py`) — mixed.**
-The 79 hawkish/dovish phrases in `src/lexicon.py` are my own, written against
-FOMC language rather than adapted from an existing dictionary. Claude wrote the
-matching engine (the ordered, gap-limited phrase matcher), the tf.idf weighting
-and the diagnostics, and proposed the two matching refinements described below
-after I inspected the matched spans and found false positives.
+* a minutes press release is only a ~130-word announcement, so the code has to
+  follow it through to the minutes document itself;
+* the Board's page chrome (title block, share widget, contact footer) was being
+  scored as document text, which on a 130-word statement is a tenth of it;
+* the FOMC's operative decision sentence was being swallowed into a run-on
+  preamble, because the vote line ends in a colon rather than a period.
 
-Two corrections I made after auditing the matched text:
+**Method 1, the word list (`src/lexicon.py`, `src/score_wordlist.py`).**
+Claude wrote the 79 hawkish and dovish phrases, the ordered gap-limited phrase
+matcher, the tf.idf weighting and the diagnostics. It audited its own matched
+spans, found three classes of false positive (a gap budget that stretched across
+clauses, "further *price* increases" counting as policy tightening, and
+inflation-*compensation* language being read as inflation-*outlook* language),
+and fixed all three. It validated the finished list against policy history
+rather than against the regressions the list feeds — 2022-23 at the hawkish
+extreme, 2020-21 and 2024 at the dovish extreme, most dovish statement being the
+emergency intermeeting cut of March 3, 2020.
 
-* The gap budget originally ran across the whole phrase, which let "inflation"
-  chain to an "increased" eight tokens away in an unrelated clause. It now
-  applies between consecutive tokens of the phrase.
-* Inflation *compensation* and *breakeven* language was being scored as
-  statements about the inflation outlook. Those tokens now void a match.
+**Method 2, FinBERT (`src/score_finbert.py`).**
+Claude wrote the sentence splitter, the inference loop and caching, and the
+rule-based rate-direction extractor. It stated the sentiment layer's sign
+convention as a testable hypothesis rather than an assumption and confirmed it
+empirically (raw FinBERT sentiment correlates −0.177 with the word list over the
+252 Powell-era documents).
 
-I validated the finished list against known policy history rather than against
-its own output: it puts 2022-23 at the hawkish extreme and 2020-21 and 2024 at
-the dovish extreme, and its single most dovish statement is the emergency
-intermeeting cut of March 3, 2020. I did not tune the list to improve any
-regression result.
+**Exhibits, regressions and the report (`src/exhibits.py`, `src/validate.py`,
+`report/`).** Claude wrote the event-window logic, Tables 1-3, Figure 1, the
+notebook, the PDF build pipeline, and the prose of report sections 1-9.
 
-**FinBERT, Method 2 (`src/score_finbert.py`) — AI-assisted.**
-Claude wrote the sentence splitter, the FinBERT inference loop and caching, and
-the rule-based rate-direction extractor (direction verbs anchored to the policy
-rate, basis-point and fractional-percentage-point magnitudes, negation for holds).
-I specified the magnitude ordering it has to respect — 50 bp more hawkish than
-25 bp — and checked it against hand-written test sentences covering holds,
-dissents and both directions.
-
-The sign convention for the sentiment layer is stated as a hypothesis in the
-module and tested rather than assumed: over the 252 Powell-era documents, raw
-FinBERT sentiment correlates −0.177 with the word list, confirming that hawkish
-FOMC text reads as *bad news* to FinBERT. Had that come out positive, the
-convention would have been wrong and the report would have had to say so.
-
-Two extraction bugs were found by inspecting sentence-level output rather than
-document-level scores, and fixed: the Board's page chrome (title block, share
-widget, contact footer) was being scored as document text, which on a 130-word
-statement is a tenth of the document; and the FOMC's operative decision sentence
-was being swallowed into a run-on preamble because the vote line ends in a colon
-rather than a period.
-
-**I did not tune either method to make them agree.** They disagree on the Warsh
-era, and the report presents that disagreement as a result.
-
-**Exhibits and regressions (`src/exhibits.py`, `src/validate.py`) — AI-assisted.**
-Claude wrote the event-window logic (the release-time rule that decides between a
-same-day and a next-session close-to-close window), Table 1, Figure 1, Table 2,
-the Table 3 regressions and the report build script. Two analytical choices in
-Table 3 are mine and are worth flagging, because they change how the table reads:
+Two analytical choices in Table 3 were Claude's, proposed and argued for
+unprompted, and I accepted them:
 
 * **No p-values.** With three parameters and six to eight observations,
   conventional significance tests would imply far more than the data supports.
-  The table reports coefficients, signs and R-squared instead, and the
-  sign-agreement column asks whether each coefficient points the way theory
-  says — a question six observations can speak to.
+  The table reports coefficients, signs and R-squared, and a sign-agreement
+  column that asks whether each coefficient points the way theory says.
 * **Incremental R-squared.** The 3-month bill control mechanically explains most
   of the variation in the yield indicators, so the full R-squared flatters the
-  tone variable. The table reports the increment over a control-only regression,
-  which is the number that actually answers whether tone moved markets.
+  tone variable. The table reports the increment over a control-only regression.
 
-Table 3 is also run two ways. Two Warsh-era dates carry both a statement and its
-press conference, so the by-release panel repeats the same dependent variable
-twice; the collapsed panel averages releases sharing a market day. Both are
-reported because neither is obviously right.
+**Section 8, the forecast.** The rate-decision probabilities, the tone-direction
+probability, the per-indicator forecasts and the trade recommendation in section
+8 of the report were **generated by Claude** from the completed tables and the
+current market levels, at my request. I reviewed them and let them stand. They
+are not independently derived by me, and this disclosure supersedes the earlier
+claim in this file that they were.
 
-**The report (`report/report.md`, `report/build_report.py`) — mixed.**
-Claude drafted sections 1-7 and 9 from the results and built the PDF pipeline. I
-reviewed and edited the prose, and I wrote section 8 (see below). The build
-script injects every table and the figure directly from `outputs/` at build
-time, so the report cannot drift from the analysis that produced it.
+**Neither method was tuned to make the two agree.** They disagree over the Warsh
+era, and the report presents that disagreement as its central methodological
+result rather than smoothing it away.
 
-## What is my own
+## What is mine
 
-**Section 8 of the report — the forecast for the September 16, 2026 meeting:
-rate decision probabilities, the tone-direction probability, the per-indicator
-probabilities and expected sizes, the trade recommendation and its falsification
-condition — is my own analysis.** It is not generated output. It is my reading of
-the completed tables. The section is laid out with empty cells in the committed
-PDF precisely so that it is clear nothing in it was machine-written.
+* The assignment specification: the two-method design, the tf.idf formula, the
+  four indicators and the 3-month bill control, the four readings and the
+  specific points to draw from each, and the required report structure. Claude
+  implemented this brief; it did not choose it.
+* Direction and review throughout — deciding what to build next, what to accept,
+  what to send back.
+* The decision to disclose AI use at this level of detail, and to correct the
+  earlier version of this file.
+* Repository visibility and publication.
 
 ## Scope decisions made under time pressure
 
 The assignment was completed against a same-day deadline. Where completeness
-traded off against finishing, I took the version that finishes, and recorded the
-cost here.
+traded off against finishing, the version that finishes was taken, and the cost
+is recorded here.
 
 **1. Speech collection is scoped, not exhaustive.**
-Collecting every speech either Chair gave (hundreds of documents, several
-distinct page templates) was not feasible in the time available, and most of
-those speeches are not about monetary policy. The `speech` document type is
-restricted to the sitting Chair's semiannual congressional testimony, FOMC
-press conference transcripts, and major policy speeches, selected by a keyword
-and venue filter over the Board's speech feed (see `src/config.py`).
+Collecting every speech either Chair gave (hundreds of documents across several
+page templates) was not feasible in the time available, and most of those
+speeches are not about monetary policy. The `speech` document type is restricted
+to the sitting Chair's semiannual congressional testimony, FOMC press conference
+transcripts, and major policy speeches, selected by a keyword and venue filter
+over the Board's speech feed (see `src/config.py`).
 
-*Cost:* the filter is keyword-based, so it admits a handful of borderline items
-(e.g. short "Opening Remarks" at policy conferences) and may miss a
-policy-relevant speech with an oblique title. Since statements and minutes are
-complete and the press conference transcripts are complete, the Warsh-era
-evidence does not hinge on the speech filter.
+*Cost:* the filter is keyword-based, so it admits a few borderline items (short
+"Opening Remarks" at policy conferences) and could miss a policy-relevant speech
+with an oblique title. Because statements, minutes and press conference
+transcripts are all complete, the Warsh-era evidence does not hinge on it.
 
 **2. Method 2 is a rule-based approximation, not a fine-tuned model.**
 Doh, Song and Yang (2023) fine-tune a sentence encoder on synthetic numeric data
-so the embeddings recognise magnitude and direction. Fine-tuning a model was not
-feasible tonight. Instead I run FinBERT sentence-level sentiment and augment it
-with a regex extractor for rate-direction language, which addresses FinBERT's
-known failure mode — it cannot reliably distinguish "lower by 25 basis points"
-from "higher by 25 basis points". This is an approximation of the numeric
-property fine-tuning, not a reproduction of it, and the report says so.
+so that magnitude and direction live inside the embeddings. Fine-tuning was not
+feasible in the time available, so FinBERT is run frozen and augmented with a
+regex layer for rate-direction language. The report treats the *failure* of that
+approximation as a finding: the rule layer reaches only the 2.4% of sentences
+that state a number, so the frozen sentiment layer still drives the document
+score and gets the Warsh era backwards.
 
 **3. Small-N handling.**
-The Warsh era contains 8 documents. Table 3 reports coefficients and signs but
-does not rest on significance testing, because at this N conventional p-values
-would imply far more than the data supports. This is stated in the report rather
-than left for the reader to infer.
+The Warsh era contains 8 documents on 6 distinct market days. Table 3 reports
+coefficients and signs and does not rest on significance testing. This is stated
+on the face of the table rather than left for the reader to infer.
 
-**4. Alternative-statement calibration is not available.**
-Doh, Song and Yang calibrate tone against the FOMC's alternative statements
+**4. Alternative-statement calibration is unavailable.**
+Doh, Song and Yang calibrate against the FOMC's alternative statements
 (Alt A/B/C/D), released with a five-year lag. Warsh-era alternatives will not be
-declassified until roughly 2031, so that calibration scale cannot be used here.
+declassified until roughly 2031.
+
+**5. No market-implied rate probabilities.**
+The section 8 forecast is anchored on cash Treasury levels (the 3-month bill at
+45bp and the 1-year at 72bp over the current funds midpoint) rather than on fed
+funds futures, which were not collected. Futures would be the better anchor.
