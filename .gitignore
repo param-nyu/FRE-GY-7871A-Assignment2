@@ -1,0 +1,23 @@
+# No data files are committed. Everything under data/ is reproducible by
+# running `python -m src.collect` (see README).
+data/**
+!data/
+!data/*/
+!data/**/.gitkeep
+
+# The PDF report is built from report/report.md; the build directory holds
+# intermediate files that embed data, so only the finished PDF is tracked.
+report/build/
+
+outputs/*
+!outputs/.gitkeep
+!outputs/*.png
+!outputs/*.csv
+
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+.DS_Store
