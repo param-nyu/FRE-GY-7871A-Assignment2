@@ -44,7 +44,28 @@ intermeeting cut of March 3, 2020. I did not tune the list to improve any
 regression result.
 
 **FinBERT, Method 2 (`src/score_finbert.py`) — AI-assisted.**
-_(to be completed)_
+Claude wrote the sentence splitter, the FinBERT inference loop and caching, and
+the rule-based rate-direction extractor (direction verbs anchored to the policy
+rate, basis-point and fractional-percentage-point magnitudes, negation for holds).
+I specified the magnitude ordering it has to respect — 50 bp more hawkish than
+25 bp — and checked it against hand-written test sentences covering holds,
+dissents and both directions.
+
+The sign convention for the sentiment layer is stated as a hypothesis in the
+module and tested rather than assumed: over the 252 Powell-era documents, raw
+FinBERT sentiment correlates −0.177 with the word list, confirming that hawkish
+FOMC text reads as *bad news* to FinBERT. Had that come out positive, the
+convention would have been wrong and the report would have had to say so.
+
+Two extraction bugs were found by inspecting sentence-level output rather than
+document-level scores, and fixed: the Board's page chrome (title block, share
+widget, contact footer) was being scored as document text, which on a 130-word
+statement is a tenth of the document; and the FOMC's operative decision sentence
+was being swallowed into a run-on preamble because the vote line ends in a colon
+rather than a period.
+
+**I did not tune either method to make them agree.** They disagree on the Warsh
+era, and the report presents that disagreement as a result.
 
 **Regression code (`src/validate.py`) — AI-assisted.**
 _(to be completed)_

@@ -1,47 +1,47 @@
 phrase,polarity,total_hits,doc_freq,idf,tfidf_mass
-accommodat(ive|ion|e),dovish,853,129,0.701,597.8
+accommodat(ive|ion|e),dovish,849,125,0.732,621.8
 support (employment|economy|recovery),dovish,317,91,1.05,332.8
-inflation elevated,hawkish,214,78,1.204,257.7
-gradual,dovish,223,89,1.072,239.1
-cut(ting)? (the )?(target )?rates?,dovish,152,54,1.572,238.9
-inflation (is )?(muted|low|below),dovish,321,130,0.693,222.5
-transitory,dovish,137,52,1.609,220.5
+inflation elevated,hawkish,209,77,1.217,254.3
+gradual,dovish,221,88,1.083,239.4
+cut(ting)? (the )?(target )?rates?,dovish,150,53,1.59,238.6
+inflation (is )?(muted|low|below),dovish,316,130,0.693,219.0
+transitory,dovish,133,51,1.629,216.6
 inflation (has )?(moved|coming) (down|toward),dovish,130,52,1.609,209.2
 sufficiently restrictive,hawkish,99,36,1.977,195.7
-tighten(ing)? (of )?(monetary )?policy,hawkish,126,57,1.518,191.2
-downside risks? (to )?(employment|activity|economy|growth),dovish,133,62,1.434,190.7
+downside risks? (to )?(employment|activity|economy|growth),dovish,131,61,1.45,189.9
+tighten(ing)? (of )?(monetary )?policy,hawkish,125,57,1.518,189.7
 patient,dovish,99,41,1.847,182.9
 raise target range,hawkish,99,44,1.776,175.9
-job gains (robust|strong|solid),hawkish,155,85,1.118,173.3
-lower target range,dovish,96,44,1.776,170.5
+job gains (robust|strong|solid),hawkish,154,85,1.118,172.2
 unemployment rate (declined|fell|low),hawkish,304,149,0.557,169.2
 policy firming,hawkish,90,40,1.872,168.5
 labor market (remains? )?tight,hawkish,132,73,1.27,167.7
-inflation expectations? (well )?anchored,dovish,250,133,0.67,167.6
+inflation expectations? (well )?anchored,dovish,248,133,0.67,166.2
+lower target range,dovish,92,43,1.799,165.6
 inflation (has )?(risen|increased|picked up),hawkish,127,71,1.298,164.8
+inflation(ary)? pressures?,hawkish,516,190,0.314,161.8
 restrictive stance,hawkish,91,44,1.776,161.7
-inflation(ary)? pressures?,hawkish,519,191,0.308,160.1
-inflation above (the )?(committee|2|two) percent,hawkish,177,106,0.897,158.8
+inflation above (the )?(committee|2|two) percent,hawkish,176,105,0.907,159.6
 upside risks? inflation,hawkish,109,61,1.45,158.0
-purchases? (of )?(treasury|agency|longer-?term) securities,dovish,84,40,1.872,157.2
+purchases? (of )?(treasury|agency|longer-?term) securities,dovish,83,40,1.872,155.4
 additional (firming|tightening),hawkish,68,29,2.193,149.2
 restore price stability,hawkish,64,29,2.193,140.4
-price pressures?,hawkish,81,47,1.711,138.6
-slack,dovish,72,38,1.923,138.5
+price pressures?,hawkish,80,46,1.732,138.6
 higher (for|longer),hawkish,105,71,1.298,136.3
-tight labor market,hawkish,83,52,1.609,133.6
-inflation (has )?eas(ed|ing),dovish,86,56,1.535,132.0
+slack,dovish,69,37,1.95,134.5
+tight labor market,hawkish,82,51,1.629,133.6
+inflation (has )?eas(ed|ing),dovish,85,55,1.553,132.0
 increase target range,hawkish,63,34,2.034,128.2
 strongly committed (to )?(returning )?inflation,hawkish,89,62,1.434,127.6
 job gains (slowed|moderated|weakened),dovish,61,33,2.064,125.9
-inflation (has )?(declined|moderated|slowed|fallen|cooled),dovish,85,61,1.45,123.2
 softening (in )?(the )?labor market,dovish,60,34,2.034,122.1
+inflation (has )?(declined|moderated|slowed|fallen|cooled),dovish,81,59,1.483,120.1
 remov(al|e|ing) (of )?(policy )?accommodation,hawkish,48,22,2.47,118.5
-restoring price stability,hawkish,56,33,2.064,115.6
 greater confidence inflation,dovish,46,22,2.47,113.6
+restoring price stability,hawkish,55,33,2.064,113.5
 labor market (has )?(cooled|softened|weakened|eased),dovish,54,32,2.095,113.1
-basis points? (decrease|lower|cut),dovish,46,24,2.383,109.6
-progress (on|toward) (2|inflation) (percent )?(objective|goal|target),dovish,55,37,1.95,107.2
+basis points? (decrease|lower|cut),dovish,45,23,2.425,109.1
+progress (on|toward) (2|inflation) (percent )?(objective|goal|target),dovish,54,36,1.977,106.8
 recalibrat(e|ion|ing),dovish,36,15,2.853,102.7
 basis points? (increase|higher),hawkish,43,24,2.383,102.5
 further (firming|tightening),hawkish,43,25,2.342,100.7
@@ -49,24 +49,24 @@ activity (slowed|softened|weakened|moderated),dovish,44,28,2.228,98.1
 inflation above target,hawkish,45,30,2.159,97.2
 sustain the expansion,dovish,38,22,2.47,93.8
 more restrictive,hawkish,36,21,2.516,90.6
-headwinds,dovish,41,29,2.193,89.9
-eas(e|ing) (of )?(monetary )?policy,dovish,37,27,2.265,83.8
-policy easing,dovish,32,19,2.616,83.7
+headwinds,dovish,40,28,2.228,89.1
 wage pressures?,hawkish,35,24,2.383,83.4
-labor market tightness,hawkish,36,27,2.265,81.5
+eas(e|ing) (of )?(monetary )?policy,dovish,36,26,2.303,82.9
+policy easing,dovish,31,18,2.67,82.8
 reduce target range,dovish,33,22,2.47,81.5
 overheating,hawkish,28,16,2.788,78.1
-lowering target range,dovish,26,13,2.996,77.9
+lowering target range,dovish,25,12,3.076,76.9
 inflation expectations? (rising|rose|drifted|unanchored),hawkish,31,24,2.383,73.9
+labor market tightness,hawkish,31,27,2.265,70.2
 inflation remain(s|ed)? (too )?high,hawkish,30,26,2.303,69.1
 less restrictive,dovish,24,19,2.616,62.8
 raising target range,hawkish,22,17,2.727,60.0
 demand exceeds supply,hawkish,16,16,2.788,44.6
 inflation unacceptably high,hawkish,14,11,3.163,44.3
-unemployment rate (rose|risen|increased|edged up),dovish,15,14,2.922,43.8
 further rate increases?,hawkish,13,9,3.363,43.7
+unemployment rate (rose|risen|increased|edged up),dovish,14,14,2.922,40.9
 will deliver price stability,hawkish,11,7,3.615,39.8
-keep(ing)? policy restrictive,hawkish,12,10,3.258,39.1
+keep(ing)? policy restrictive,hawkish,11,9,3.363,37.0
 resolute,hawkish,10,10,3.258,32.6
 whatever (takes|necessary),hawkish,7,4,4.174,29.2
 inflation subdued,dovish,8,7,3.615,28.9

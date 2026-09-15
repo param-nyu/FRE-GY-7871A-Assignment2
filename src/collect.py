@@ -67,16 +67,36 @@ def _clean(text: str) -> str:
 # ---------------------------------------------------------------------------
 # Text extraction
 # ---------------------------------------------------------------------------
+# Trailing furniture on Board press releases: contact details, the link to the
+# Implementation Note, and the page's own timestamp. None of it is Committee
+# language, and on a 165-word statement it is a tenth of the document.
+_TAIL_JUNK = re.compile(
+    r"(For media inquiries[^.]*\.|Implementation Note issued.*$|Last Update:.*$)",
+    re.I | re.S)
+
+
 def _html_text(raw: bytes) -> str:
     from bs4 import BeautifulSoup
 
     soup = BeautifulSoup(raw, "lxml")
-    # The Board wraps article bodies in #article or #content; footnotes, nav and
-    # the "Last Update" block are stripped so they do not enter the word counts.
+    # The Board wraps article bodies in #article or #content.
     node = soup.select_one("#article") or soup.select_one("#content") or soup
-    for bad in node.select("nav, script, style, .footnotes, #lastUpdate, .pdf-link"):
+
+    # .heading is the title/date/venue block and the share widget is page
+    # chrome; both are metadata we already hold in the manifest, and leaving
+    # them in gives every document a spurious run-on opening sentence.
+    for bad in node.select("nav, script, style, .heading, li.share, #shareMenu, "
+                           "#lastUpdate, .pdf-link"):
         bad.decompose()
-    return _clean(node.get_text(" "))
+
+    # Footnotes sit in ordinary <p> tags with no container class of their own,
+    # but each one carries a "Return to text" backlink. They are citations and
+    # attendee lists, not policy language, so they are dropped.
+    for para in node.find_all("p"):
+        if para.find(string=lambda t: t and "Return to text" in t):
+            para.decompose()
+
+    return _clean(_TAIL_JUNK.sub("", node.get_text(" ")))
 
 
 def _pdf_text(raw: bytes) -> str:
