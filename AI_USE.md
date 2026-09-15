@@ -22,8 +22,29 @@ that follows a minutes press release through to the minutes document itself
 also AI-written. I verified the resulting corpus by hand against the FOMC
 calendar.
 
-**Scoring pipeline — AI-assisted, with my content.**
-_(to be completed when the scoring code is final)_
+**Word list, Method 1 (`src/lexicon.py`, `src/score_wordlist.py`) — mixed.**
+The 79 hawkish/dovish phrases in `src/lexicon.py` are my own, written against
+FOMC language rather than adapted from an existing dictionary. Claude wrote the
+matching engine (the ordered, gap-limited phrase matcher), the tf.idf weighting
+and the diagnostics, and proposed the two matching refinements described below
+after I inspected the matched spans and found false positives.
+
+Two corrections I made after auditing the matched text:
+
+* The gap budget originally ran across the whole phrase, which let "inflation"
+  chain to an "increased" eight tokens away in an unrelated clause. It now
+  applies between consecutive tokens of the phrase.
+* Inflation *compensation* and *breakeven* language was being scored as
+  statements about the inflation outlook. Those tokens now void a match.
+
+I validated the finished list against known policy history rather than against
+its own output: it puts 2022-23 at the hawkish extreme and 2020-21 and 2024 at
+the dovish extreme, and its single most dovish statement is the emergency
+intermeeting cut of March 3, 2020. I did not tune the list to improve any
+regression result.
+
+**FinBERT, Method 2 (`src/score_finbert.py`) — AI-assisted.**
+_(to be completed)_
 
 **Regression code (`src/validate.py`) — AI-assisted.**
 _(to be completed)_
